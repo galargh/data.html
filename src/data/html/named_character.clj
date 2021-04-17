@@ -1,4 +1,4 @@
-(ns data.html.named
+(ns data.html.named-character
   (:require (data.html [stackable :refer [safe-peek]])))
 
 (def ^:const named-character-references
@@ -2237,7 +2237,7 @@
 (def ^:private sorted-key-counts
   (reverse (sort (distinct (map count (keys named-character-references))))))
 
-(defn named-character-reference-find
+(defn find-named-character-reference
   [reader]
   (some #(let [candidate (apply str (safe-peek reader %))]
            (if (contains? named-character-references candidate) candidate nil))

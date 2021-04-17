@@ -1,4 +1,4 @@
-(ns data.html.numeric)
+(ns data.html.numeric-character-references)
 
 (def ^:private ^:const ascii-whitespace-character-references
   #{0x0009 0x000A 0x000C 0x000D 0x0020})
