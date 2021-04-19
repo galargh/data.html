@@ -72,7 +72,7 @@
                           :data \u0000,
                           :errors (list :unexpected-null-character)}
                          (tokenize remaining-input-characters tokenizer-state))
-            nil (list {:type :EOF, :tokenizer-state tokenizer-state})
+            nil (list {:type :EOF})
             (cons {:type :character, :data next-input-character}
                   (tokenize remaining-input-characters tokenizer-state)))
     :RCDATA
@@ -87,7 +87,7 @@
                       :data \uFFFD,
                       :errors (list :unexpected-null-character)}
                      (tokenize remaining-input-characters tokenizer-state))
-        nil (list {:type :EOF, :tokenizer-state tokenizer-state})
+        nil (list {:type :EOF})
         (cons {:type :character, :data next-input-character}
               (tokenize remaining-input-characters tokenizer-state)))
     :RAWTEXT
@@ -98,7 +98,7 @@
                       :data \uFFFD,
                       :errors (list :unexpected-null-character)}
                      (tokenize remaining-input-characters tokenizer-state))
-        nil (list {:type :EOF, :tokenizer-state tokenizer-state})
+        nil (list {:type :EOF})
         (cons {:type :character, :data next-input-character}
               (tokenize remaining-input-characters tokenizer-state)))
     :script-data
@@ -109,7 +109,7 @@
                       :data \uFFFD,
                       :errors (list :unexpected-null-character)}
                      (tokenize remaining-input-characters tokenizer-state))
-        nil (list {:type :EOF, :tokenizer-state tokenizer-state})
+        nil (list {:type :EOF})
         (cons {:type :character, :data next-input-character}
               (tokenize remaining-input-characters tokenizer-state)))
     :PLAINTEXT (condp rich-compare next-input-character
@@ -118,7 +118,7 @@
                                :errors (list :unexpected-null-character)}
                               (tokenize remaining-input-characters
                                         tokenizer-state))
-                 nil (list {:type :EOF, :tokenizer-state tokenizer-state})
+                 nil (list {:type :EOF})
                  (cons {:type :character, :data next-input-character}
                        (tokenize remaining-input-characters tokenizer-state)))
     :tag-open
@@ -141,7 +141,7 @@
                          (list :unexpected-question-mark-instead-of-tag-name)}))
         nil (list
               {:type :character, :data \<, :errors (list :eof-before-tag-name)}
-              {:type :EOF, :tokenizer-state tokenizer-state})
+              {:type :EOF})
         (cons {:type :character,
                :data \<,
                :errors (list :invalid-first-character-of-tag-name)}
@@ -159,7 +159,7 @@
         nil (list
               {:type :character, :data \<, :errors (list :eof-before-tag-name)}
               {:type :character, :data \/}
-              {:type :EOF, :tokenizer-state tokenizer-state})
+              {:type :EOF})
         (tokenize
           all-input-characters
           (assoc tokenizer-state
@@ -194,7 +194,6 @@
                             :data (str data \uFFFD)
                             :errors (conj errors :unexpected-null-character))))
         nil (list {:type :EOF,
-                   :tokenizer-state tokenizer-state,
                    :errors (list :eof-in-tag)})
         (tokenize remaining-input-characters
                   (assoc tokenizer-state
@@ -447,7 +446,6 @@
                       :errors (list :unexpected-null-character)}
                      (tokenize remaining-input-characters tokenizer-state))
         nil (list {:type :EOF,
-                   :tokenizer-state tokenizer-state,
                    :errors (list :eof-in-script-html-comment-like-text)})
         (cons {:type :character, :data next-input-character}
               (tokenize remaining-input-characters tokenizer-state)))
@@ -467,7 +465,6 @@
                  (tokenize remaining-input-characters
                            (assoc tokenizer-state :state :script-data-escaped)))
         nil (list {:type :EOF,
-                   :tokenizer-state tokenizer-state,
                    :errors (list :eof-in-script-html-comment-like-text)})
         (cons {:type :character, :data next-input-character}
               (tokenize remaining-input-characters
@@ -489,7 +486,6 @@
                  (tokenize remaining-input-characters
                            (assoc tokenizer-state :state :script-data-escaped)))
         nil (list {:type :EOF,
-                   :tokenizer-state tokenizer-state,
                    :errors (list :eof-in-script-html-comment-like-text)})
         (cons {:type :character, :data next-input-character}
               (tokenize remaining-input-characters
@@ -609,7 +605,6 @@
                       :errors (list :unexpected-null-character)}
                      (tokenize remaining-input-characters tokenizer-state))
         nil (list {:type :EOF,
-                   :tokenizer-state tokenizer-state,
                    :errors (list :eof-in-script-html-comment-like-text)})
         (cons {:type :character, :data next-input-character}
               (tokenize remaining-input-characters tokenizer-state)))
@@ -629,7 +624,6 @@
                                (assoc tokenizer-state
                                  :state :script-data-double-escaped)))
         nil (list {:type :EOF,
-                   :tokenizer-state tokenizer-state,
                    :errors (list :eof-in-script-html-comment-like-text)})
         (cons {:type :character, :data next-input-character}
               (tokenize remaining-input-characters
@@ -654,7 +648,6 @@
                                (assoc tokenizer-state
                                  :state :script-data-double-escaped)))
         nil (list {:type :EOF,
-                   :tokenizer-state tokenizer-state,
                    :errors (list :eof-in-script-html-comment-like-text)})
         (cons {:type :character, :data next-input-character}
               (tokenize remaining-input-characters
@@ -813,7 +806,6 @@
                              :stack-of-open-elements
                                (tag-to-stack token stack-of-open-elements))))
         nil (list {:type :EOF,
-                   :tokenizer-state tokenizer-state,
                    :errors (list :eof-in-tag)})
         (tokenize
           all-input-characters
@@ -867,7 +859,6 @@
                                  :errors (conj (:errors attribute)
                                                :unexpected-null-character))))))
         nil (list {:type :EOF,
-                   :tokenizer-state tokenizer-state,
                    :errors (list :eof-in-tag)})
         (tokenize
           remaining-input-characters
@@ -898,7 +889,6 @@
                                  :errors (conj (:errors attribute)
                                                :unexpected-null-character))))))
         nil (list {:type :EOF,
-                   :tokenizer-state tokenizer-state,
                    :errors (list :eof-in-tag)})
         (tokenize
           remaining-input-characters
@@ -951,7 +941,6 @@
                             (:errors attribute)
                             :unexpected-character-in-unquoted-attribute-value))))))
         nil (list {:type :EOF,
-                   :tokenizer-state tokenizer-state,
                    :errors (list :eof-in-tag)})
         (tokenize
           remaining-input-characters
@@ -976,7 +965,6 @@
                              :stack-of-open-elements
                                (tag-to-stack token stack-of-open-elements))))
         nil (list {:type :EOF,
-                   :tokenizer-state tokenizer-state,
                    :errors (list :eof-in-tag)})
         (tokenize
           all-input-characters
@@ -998,7 +986,6 @@
                              :state :data
                              :token nil)))
         nil (list {:type :EOF,
-                   :tokenizer-state tokenizer-state,
                    :errors (list :eof-in-tag)})
         (tokenize
           all-input-characters
@@ -1013,7 +1000,7 @@
                            (assoc tokenizer-state
                              :state :data
                              :token nil)))
-        nil (list token {:type :EOF, :tokenizer-state tokenizer-state})
+        nil (list token {:type :EOF})
         \u0000 (tokenize
                  remaining-input-characters
                  (assoc tokenizer-state
@@ -1071,7 +1058,7 @@
                              :state :data
                              :token nil)))
         nil (list (assoc token :errors (conj errors :eof-in-comment))
-                  {:type :EOF, :tokenizer-state tokenizer-state})
+                  {:type :EOF})
         (tokenize all-input-characters
                   (assoc tokenizer-state
                     :state :comment
@@ -1093,7 +1080,7 @@
                                    :errors (conj errors
                                                  :unexpected-null-character))))
                nil (list (assoc token :errors (conj errors :eof-in-comment))
-                         {:type :EOF, :tokenizer-state tokenizer-state})
+                         {:type :EOF})
                (tokenize remaining-input-characters
                          (assoc tokenizer-state
                            :token (assoc token
@@ -1137,7 +1124,7 @@
         \- (tokenize remaining-input-characters
                      (assoc tokenizer-state :state :comment-end))
         nil (list (assoc token :errors (conj errors :eof-in-comment))
-                  {:type :EOF, :tokenizer-state tokenizer-state})
+                  {:type :EOF})
         (tokenize all-input-characters
                   (assoc tokenizer-state
                     :state :comment
@@ -1155,7 +1142,7 @@
                                 (assoc tokenizer-state
                                   :token (assoc token :data (str data \-))))
                    nil (list (assoc token :errors (conj errors :eof-in-comment))
-                             {:type :EOF, :tokenizer-state tokenizer-state})
+                             {:type :EOF})
                    (tokenize all-input-characters
                              (assoc tokenizer-state
                                :state :comment
@@ -1170,7 +1157,7 @@
                  (tokenize remaining-input-characters
                            (assoc tokenizer-state :state :data)))
         nil (list (assoc token :errors (conj errors :eof-in-comment))
-                  {:type :EOF, :tokenizer-state tokenizer-state})
+                  {:type :EOF})
         (tokenize all-input-characters
                   (assoc tokenizer-state
                     :state :comment
@@ -1199,7 +1186,7 @@
         nil (list {:type :DOCTYPE,
                    :errors (list :eof-in-doctype),
                    :force-quirks :on}
-                  {:type :EOF, :tokenizer-state tokenizer-state})
+                  {:type :EOF})
         (tokenize remaining-input-characters
                   (assoc tokenizer-state
                     :state :DOCTYPE-name
@@ -1229,7 +1216,7 @@
         nil (list (assoc token
                     :errors (conj errors :eof-in-doctype)
                     :force-quirks :on)
-                  {:type :EOF, :tokenizer-state tokenizer-state})
+                  {:type :EOF})
         (tokenize remaining-input-characters
                   (assoc tokenizer-state
                     :token (assoc token
@@ -1246,7 +1233,7 @@
         nil (list (assoc token
                     :errors (conj errors :eof-in-doctype)
                     :force-quirks :on)
-                  {:type :eof, :tokenizer-state tokenizer-state})
+                  {:type :eof})
         (cond (= (upper-case (apply str (safe-peek all-input-characters 6)))
                  "PUBLIC")
                 (tokenize (safe-pop all-input-characters 6)
@@ -1304,7 +1291,7 @@
         nil (list (assoc token
                     :errors (conj errors :eof-in-doctype)
                     :force-quirks :on)
-                  {:type :EOF, :tokenizer-state tokenizer-state})
+                  {:type :EOF})
         (tokenize
           all-input-characters
           (assoc tokenizer-state
@@ -1336,7 +1323,7 @@
         nil (list (assoc token
                     :errors (conj errors :eof-in-doctype)
                     :force-quirks :on)
-                  {:type :EOF, :tokenizer-state tokenizer-state})
+                  {:type :EOF})
         (tokenize
           all-input-characters
           (assoc tokenizer-state
@@ -1367,7 +1354,7 @@
         nil (list (assoc token
                     :errors (conj errors :eof-in-doctype)
                     :force-quirks :on)
-                  {:type :EOF, :tokenizer-state tokenizer-state})
+                  {:type :EOF})
         (tokenize remaining-input-characters
                   (assoc tokenizer-state
                     :token (assoc token
@@ -1394,7 +1381,7 @@
         nil (list (assoc token
                     :errors (conj errors :eof-in-doctype)
                     :force-quirks :on)
-                  {:type :EOF, :tokenizer-state tokenizer-state})
+                  {:type :EOF})
         (tokenize remaining-input-characters
                   (assoc tokenizer-state
                     :token (assoc token
@@ -1438,7 +1425,7 @@
         nil (list (assoc token
                     :errors (conj errors :eof-in-doctype)
                     :force-quirks :on)
-                  {:type :EOF, :tokenizer-state tokenizer-state})
+                  {:type :EOF})
         (tokenize
           all-input-characters
           (assoc tokenizer-state
@@ -1470,7 +1457,7 @@
         nil (list (assoc token
                     :errors (conj errors :eof-in-doctype)
                     :force-quirks :on)
-                  {:type :EOF, :tokenizer-state tokenizer-state})
+                  {:type :EOF})
         (tokenize
           all-input-characters
           (assoc tokenizer-state
@@ -1516,7 +1503,7 @@
         nil (list (assoc token
                     :errors (conj errors :eof-in-doctype)
                     :force-quirks :on)
-                  {:type :EOF, :tokenizer-state tokenizer-state})
+                  {:type :EOF})
         (tokenize
           all-input-characters
           (assoc tokenizer-state
@@ -1548,7 +1535,7 @@
         nil (list (assoc token
                     :errors (conj errors :eof-in-doctype)
                     :force-quirks :on)
-                  {:type :EOF, :tokenizer-state tokenizer-state})
+                  {:type :EOF})
         (tokenize
           all-input-characters
           (assoc tokenizer-state
@@ -1579,7 +1566,7 @@
         nil (list (assoc token
                     :errors (conj errors :eof-in-doctype)
                     :force-quirks :on)
-                  {:type :EOF, :tokenizer-state tokenizer-state})
+                  {:type :EOF})
         (tokenize remaining-input-characters
                   (assoc tokenizer-state
                     :token (assoc token
@@ -1606,7 +1593,7 @@
         nil (list (assoc token
                     :errors (conj errors :eof-in-doctype)
                     :force-quirks :on)
-                  {:type :EOF, :tokenizer-state tokenizer-state})
+                  {:type :EOF})
         (tokenize remaining-input-characters
                   (assoc tokenizer-state
                     :token (assoc token
@@ -1624,7 +1611,7 @@
         nil (list (assoc token
                     :errors (conj errors :eof-in-doctype)
                     :force-quirks :on)
-                  {:type :EOF, :tokenizer-state tokenizer-state})
+                  {:type :EOF})
         (tokenize
           all-input-characters
           (assoc tokenizer-state
@@ -1645,14 +1632,13 @@
                            :token (assoc token
                                     :errors (conj errors
                                                   :unexpected-null-character))))
-        nil (list token {:type :EOF, :tokenizer-state tokenizer-state})
+        nil (list token {:type :EOF})
         (tokenize remaining-input-characters tokenizer-state))
     :CDATA-section
       (condp rich-compare next-input-character
         \] (tokenize remaining-input-characters
                      (assoc tokenizer-state :state :CDATA-section-bracket))
         nil (list {:type :EOF,
-                   :tokenizer-state tokenizer-state,
                    :errors (list :eof-in-cdata)})
         (cons {:type :character, :data next-input-character}
               (tokenize remaining-input-characters tokenizer-state)))

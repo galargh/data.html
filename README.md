@@ -1,22 +1,22 @@
 # data.html
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure library designed to tokenize HTML data.
+
+The tokenization algorithm implemented by this library closely follows the specification given [here](https://html.spec.whatwg.org/multipage/parsing.html#tokenization).
+
+The implementation of `tokenize` in this library returns a lazy sequence of tokens.
 
 ## Usage
 
-FIXME
+```clojure
+data.html=> (require 'data.html)
+nil
+data.html=> (data.html/tokenize "<html>")
+({:type :start-tag, :data "html"} {:type :EOF})
+data.html=> (data.html/tokenize "<html></html>")
+({:type :start-tag, :data "html"} {:type :end-tag, :data "html"} {:type :EOF})
+data.html=> (data.html/tokenize "<html><body><h1>data.html</h1></body></html>")
+({:type :start-tag, :data "html"} {:type :start-tag, :data "body"} {:type :start-tag, :data "h1"} {:type :character, :data \d} {:type :character, :data \a} {:type :character, :data \t} {:type :character, :data \a} {:type :character, :data \.} {:type :character, :data \h} {:type :character, :data \t} {:type :character, :data \m} {:type :character, :data \l} {:type :end-tag, :data "h1"} {:type :end-tag, :data "body"} {:type :end-tag, :data "html"} {:type :EOF})
+```
 
-## License
-
-Copyright © 2021 FIXME
-
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+## [License](LICENSE)
