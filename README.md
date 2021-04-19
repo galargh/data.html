@@ -1,4 +1,4 @@
-# data.html
+# data.html [![Clojars Project](https://img.shields.io/clojars/v/org.clojars.gfjalar/data.html.svg)](https://clojars.org/org.clojars.gfjalar/data.html)
 
 A Clojure library designed to tokenize HTML data.
 
@@ -9,7 +9,7 @@ The implementation of `tokenize` in this library returns a lazy sequence of toke
 ## Usage
 
 ```clojure
-data.html=> (require 'data.html)
+data.html=> (require 'org.clojars.gfjalar/data.html)
 nil
 data.html=> (data.html/tokenize "<html>")
 ({:type :start-tag, :data "html"} {:type :EOF})
