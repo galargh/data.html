@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+### Fixed
+- Fixed transition to `:script-data-escaped-dash-dash` state.
+
 ### Removed
 - Remove unused dependencies.
 - Remove `tag` sugar.

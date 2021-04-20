@@ -437,7 +437,7 @@
           \- (cons {:type :character, :data \-}
                    (tokenize remaining-input-characters
                              (assoc tokenizer-state
-                               :state :script-data-escaped-start-dash-dash)))
+                               :state :script-data-escaped-dash-dash)))
           (tokenize all-input-characters
                     (assoc tokenizer-state :state :script-data)))
       :script-data-escaped
