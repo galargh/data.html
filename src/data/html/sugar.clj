@@ -10,11 +10,3 @@
   ([name value re token] (contains? (set (clojure.string/split (:value (attribute name token) "") re)) value)))
 (defn errors? [element] (some? (:errors element)))
 (defn error? [error element] (contains? (set (:errors element)) error))
-(defn tag [tag-name tokens] (take-while
-                             #(not (and (type? :end-tag %)
-                                        (data? tag-name %)))
-                             (drop-while
-                              #(not (and (type? :start-tag %)
-                                         (data? tag-name %)))
-                              tokens))
-)

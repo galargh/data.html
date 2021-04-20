@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [Unreleased]
 ### Removed
 - Remove unused dependencies.
+- Remove `tag` sugar.
 
 ## [0.1.2]
 ### Added 
