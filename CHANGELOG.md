@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 ### Changed
+- Destructure name and value out of attribute.
 - Start using `:data` key for `:DOCTYPE` token.
 
 ### Fixed

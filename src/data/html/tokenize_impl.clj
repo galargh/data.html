@@ -56,7 +56,8 @@
    {:keys [state return-state temporary-buffer stack-of-open-elements
            character-reference-code scripting],
     {:keys [data public-identifier system-identifier errors],
-     [attribute & remaining-attributes :as attributes] :attributes,
+     [{:keys [name value], :as attribute} & remaining-attributes :as attributes]
+       :attributes,
      :as token}
       :token,
     :as tokenizer-state}]
@@ -736,7 +737,7 @@
                                              (if (contains?
                                                    (set (map :name
                                                           remaining-attributes))
-                                                   (:name attribute))
+                                                   name)
                                                :duplicate-attribute
                                                nil)))))))
           \= (tokenize
@@ -753,7 +754,7 @@
                                    (:errors attribute)
                                    (if (contains? (set (map :name
                                                          remaining-attributes))
-                                                  (:name attribute))
+                                                  name)
                                      :duplicate-attribute
                                      nil)))))))
           #"[A-Z]"
@@ -764,7 +765,7 @@
                          :attributes
                            (conj remaining-attributes
                                  (assoc attribute
-                                   :name (str (:name attribute)
+                                   :name (str name
                                               (Character/toLowerCase
                                                 next-input-character)))))))
           \u0000 (tokenize
@@ -774,7 +775,7 @@
                               :attributes
                                 (conj remaining-attributes
                                       (assoc attribute
-                                        :name (str (:name attribute) \uFFFD)
+                                        :name (str name \uFFFD)
                                         :errors
                                           (conj (:errors attribute)
                                                 :unexpected-null-character))))))
@@ -788,18 +789,18 @@
                       (conj
                         remaining-attributes
                         (assoc attribute
-                          :name (str (:name attribute) next-input-character)
+                          :name (str name next-input-character)
                           :errors
                             (conj (:errors attribute)
                                   :unexpected-character-in-attribute-name))))))
-          (tokenize remaining-input-characters
-                    (assoc tokenizer-state
-                      :token (assoc token
-                               :attributes
-                                 (conj remaining-attributes
-                                       (assoc attribute
-                                         :name (str (:name attribute)
-                                                    next-input-character)))))))
+          (tokenize
+            remaining-input-characters
+            (assoc tokenizer-state
+              :token (assoc token
+                       :attributes
+                         (conj remaining-attributes
+                               (assoc attribute
+                                 :name (str name next-input-character)))))))
       :after-attribute-name
         (condp rich-compare next-input-character
           #{\tab \u000A \u000C \space} (tokenize remaining-input-characters
@@ -864,19 +865,19 @@
                               :attributes
                                 (conj remaining-attributes
                                       (assoc attribute
-                                        :value (str (:value attribute) \uFFFD)
+                                        :value (str value \uFFFD)
                                         :errors
                                           (conj (:errors attribute)
                                                 :unexpected-null-character))))))
           nil (list {:type :EOF, :errors (list :eof-in-tag)})
-          (tokenize remaining-input-characters
-                    (assoc tokenizer-state
-                      :token (assoc token
-                               :attributes
-                                 (conj remaining-attributes
-                                       (assoc attribute
-                                         :value (str (:value attribute)
-                                                     next-input-character)))))))
+          (tokenize
+            remaining-input-characters
+            (assoc tokenizer-state
+              :token (assoc token
+                       :attributes
+                         (conj remaining-attributes
+                               (assoc attribute
+                                 :value (str value next-input-character)))))))
       :attribute-value-single-quoted
         (condp rich-compare next-input-character
           \' (tokenize remaining-input-characters
@@ -893,19 +894,19 @@
                               :attributes
                                 (conj remaining-attributes
                                       (assoc attribute
-                                        :value (str (:value attribute) \uFFFD)
+                                        :value (str value \uFFFD)
                                         :errors
                                           (conj (:errors attribute)
                                                 :unexpected-null-character))))))
           nil (list {:type :EOF, :errors (list :eof-in-tag)})
-          (tokenize remaining-input-characters
-                    (assoc tokenizer-state
-                      :token (assoc token
-                               :attributes
-                                 (conj remaining-attributes
-                                       (assoc attribute
-                                         :value (str (:value attribute)
-                                                     next-input-character)))))))
+          (tokenize
+            remaining-input-characters
+            (assoc tokenizer-state
+              :token (assoc token
+                       :attributes
+                         (conj remaining-attributes
+                               (assoc attribute
+                                 :value (str value next-input-character)))))))
       :attribute-value-unquoted
         (condp rich-compare next-input-character
           #{\tab \u000A \u000C \space}
@@ -929,7 +930,7 @@
                               :attributes
                                 (conj remaining-attributes
                                       (assoc attribute
-                                        :value (str (:value attribute) \uFFFD)
+                                        :value (str value \uFFFD)
                                         :errors
                                           (conj (:errors attribute)
                                                 :unexpected-null-character))))))
@@ -943,20 +944,20 @@
                       (conj
                         remaining-attributes
                         (assoc attribute
-                          :value (str (:value attribute) next-input-character)
+                          :value (str value next-input-character)
                           :errors
                             (conj
                               (:errors attribute)
                               :unexpected-character-in-unquoted-attribute-value))))))
           nil (list {:type :EOF, :errors (list :eof-in-tag)})
-          (tokenize remaining-input-characters
-                    (assoc tokenizer-state
-                      :token (assoc token
-                               :attributes
-                                 (conj remaining-attributes
-                                       (assoc attribute
-                                         :value (str (:value attribute)
-                                                     next-input-character)))))))
+          (tokenize
+            remaining-input-characters
+            (assoc tokenizer-state
+              :token (assoc token
+                       :attributes
+                         (conj remaining-attributes
+                               (assoc attribute
+                                 :value (str value next-input-character)))))))
       :after-attribute-value-quoted
         (condp rich-compare next-input-character
           #{\tab \u000A \u000C \space}
@@ -1700,16 +1701,14 @@
                          :state :numeric-character-reference
                          :temporary-buffer "&#"))
           (if attribute
-            (tokenize
-              all-input-characters
-              (assoc tokenizer-state
-                :state return-state
-                :token (assoc token
-                         :attributes (conj remaining-attributes
-                                           (assoc attribute
-                                             :value (str (:value attribute)
-                                                         "&"))))
-                :return-state nil))
+            (tokenize all-input-characters
+                      (assoc tokenizer-state
+                        :state return-state
+                        :token (assoc token
+                                 :attributes (conj remaining-attributes
+                                                   (assoc attribute
+                                                     :value (str value "&"))))
+                        :return-state nil))
             (concat (string-to-character-tokens "&")
                     (tokenize all-input-characters
                               (assoc tokenizer-state
@@ -1736,7 +1735,7 @@
                              :attributes
                                (conj remaining-attributes
                                      (assoc attribute
-                                       :value (str (:value attribute)
+                                       :value (str value
                                                    named-character-reference))))
                     :temporary-buffer nil
                     :return-state nil))
@@ -1753,7 +1752,7 @@
                               remaining-attributes
                               (assoc attribute
                                 :value (apply str
-                                         (:value attribute)
+                                         value
                                          (map char
                                            (get named-character-references
                                                 named-character-reference)))
@@ -1792,7 +1791,7 @@
                            :attributes (conj remaining-attributes
                                              (assoc attribute
                                                :value (apply str
-                                                        (:value attribute)
+                                                        value
                                                         temporary-buffer))))
                   :temporary-buffer nil))
               (concat (map #(-> {:type :character, :data %})
@@ -1812,7 +1811,7 @@
                            :attributes (conj remaining-attributes
                                              (assoc attribute
                                                :value
-                                                 (str (:value attribute)
+                                                 (str value
                                                       next-input-character))))))
               (cons {:type :character, :data next-input-character}
                     (tokenize remaining-input-characters tokenizer-state)))
@@ -1867,7 +1866,7 @@
                       (conj
                         remaining-attributes
                         (assoc attribute
-                          :value (str (:value attribute) temporary-buffer)
+                          :value (str value temporary-buffer)
                           :errors
                             (conj
                               (:errors attribute)
@@ -1899,7 +1898,7 @@
                       (conj
                         remaining-attributes
                         (assoc attribute
-                          :value (str (:value attribute) temporary-buffer)
+                          :value (str value temporary-buffer)
                           :errors
                             (conj
                               (:errors attribute)
@@ -1999,12 +1998,11 @@
               (assoc tokenizer-state
                 :state return-state
                 :token (assoc token
-                         :attributes (conj remaining-attributes
-                                           (assoc attribute
-                                             :value (str (:value attribute)
-                                                         (char code-point))
-                                             :errors (conj (:errors attribute)
-                                                           error))))
+                         :attributes
+                           (conj remaining-attributes
+                                 (assoc attribute
+                                   :value (str value (char code-point))
+                                   :errors (conj (:errors attribute) error))))
                 :temporary-buffer nil
                 :return-state nil))
             (cons
