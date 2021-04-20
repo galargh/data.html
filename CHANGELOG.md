@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+
+## [0.1.2]
 ### Added 
 - Add syntactic sugar which makes it easier to work with tokens.
 
@@ -20,6 +22,7 @@ All notable changes to this project will be documented in this file. This change
 ### Added
 - Add initial implementation for `Tokenizable` protocol.
 
-[Unreleased]: https://github.com/gfjalar/data.html/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/gfjalar/data.html/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/gfjalar/data.html/releases/tag/v0.1.2
 [0.1.1]: https://github.com/gfjalar/data.html/releases/tag/v0.1.1
 [0.1.0]: https://github.com/gfjalar/data.html/releases/tag/v0.1.0
