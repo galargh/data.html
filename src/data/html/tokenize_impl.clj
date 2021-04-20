@@ -47,7 +47,7 @@
 
 (defn ^:private buffer-to-character-tokens
   [buffer]
-  (buffer-to-character-tokens (str \< \/ buffer)))
+  (string-to-character-tokens (str \< \/ buffer)))
 
 (defn ^:private safe-conj [coll x] (if x (conj coll x) coll))
 
@@ -1708,14 +1708,12 @@
                          :attributes (conj remaining-attributes
                                            (assoc attribute
                                              :value (str (:value attribute)
-                                                         temporary-buffer))))
-                :temporary-buffer nil
+                                                         "&"))))
                 :return-state nil))
-            (concat (buffer-to-character-tokens temporary-buffer)
+            (concat (string-to-character-tokens "&")
                     (tokenize all-input-characters
                               (assoc tokenizer-state
                                 :state return-state
-                                :temporary-buffer nil
                                 :return-state nil)))))
       :named-character-reference
         (let [named-character-reference (find-named-character-reference
@@ -1877,7 +1875,7 @@
                 :temporary-buffer nil
                 :return-state nil))
             (concat
-              (buffer-to-character-tokens temporary-buffer)
+              (string-to-character-tokens temporary-buffer)
               (list {:type :error,
                      :data :absence-of-digits-in-numeric-character-reference})
               (tokenize all-input-characters
@@ -1909,7 +1907,7 @@
                 :temporary-buffer nil
                 :return-state nil))
             (concat
-              (buffer-to-character-tokens temporary-buffer)
+              (string-to-character-tokens temporary-buffer)
               (list {:type :error,
                      :data :absence-of-digits-in-numeric-character-reference})
               (tokenize all-input-characters
