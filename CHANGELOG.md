@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+### Added 
+- Add syntactic sugar which makes it easier to work with tokens.
+
 ### Changed
 - Destructure name and value out of attribute.
 - Start using `:data` key for `:DOCTYPE` token.
