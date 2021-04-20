@@ -23,9 +23,9 @@
         :else (= matching-characher next-input-character)))
 
 (defn ^:private tag-to-state
-  [{:keys [name type]} scripting]
+  [{:keys [data type]} scripting]
   (if (and (= type :start-tag) ())
-    (case name
+    (case data
       ("title" "textarea") :RCDATA
       ("style" "xmp" "iframe" "noembed" "noframes") :RAWTEXT
       ("script") :script-data
@@ -55,7 +55,7 @@
   [[next-input-character & remaining-input-characters :as all-input-characters]
    {:keys [state return-state temporary-buffer stack-of-open-elements
            character-reference-code scripting],
-    {:keys [data name public-identifier system-identifier errors],
+    {:keys [data public-identifier system-identifier errors],
      [attribute & remaining-attributes :as attributes] :attributes,
      :as token}
       :token,
@@ -1219,14 +1219,14 @@
           #"[A-Z]" (tokenize remaining-input-characters
                              (assoc tokenizer-state
                                :token (assoc token
-                                        :name (str name
+                                        :data (str data
                                                    (Character/toLowerCase
                                                      next-input-character)))))
           \u0000 (tokenize
                    remaining-input-characters
                    (assoc tokenizer-state
                      :token (assoc token
-                              :name (str name \uFFFD)
+                              :data (str data \uFFFD)
                               :errors (conj errors
                                             :unexpected-null-character))))
           nil (list (assoc token
@@ -1236,7 +1236,7 @@
           (tokenize remaining-input-characters
                     (assoc tokenizer-state
                       :token (assoc token
-                               :name (str name next-input-character)))))
+                               :data (str data next-input-character)))))
       :after-DOCTYPE-name
         (condp rich-compare next-input-character
           #{\tab \u000A \u000C \space} (tokenize remaining-input-characters
