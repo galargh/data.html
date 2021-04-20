@@ -1,4 +1,4 @@
-(defproject org.clojars.gfjalar/data.html "0.1.0"
+(defproject org.clojars.gfjalar/data.html "0.1.1"
   :description "Library for HTML data tokenization."
   :url "https://github.com/gfjalar/data.html/"
   :license {:name "MIT License"
